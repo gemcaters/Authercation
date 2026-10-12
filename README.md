@@ -3,7 +3,7 @@
 
 # Requirement
 - Fabric API (required)
-- Kotlin Fabric Language (required)
+- ~Kotlin Fabric Language (required)~ (Reworte to java will not require this now)
 - No chat report (Require to shut down the invaildtation of public signature or may cause problem later on)
 
 # server
