@@ -8,7 +8,6 @@ classes/
 #Folder
 .artifact/
 .kotlin/
-gradle/
 
 # eclipse
 
