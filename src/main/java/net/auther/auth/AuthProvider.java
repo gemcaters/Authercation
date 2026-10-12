@@ -1,4 +1,4 @@
-package net.auther.auth
+package net.auther.auth;
 
 /**
  * Describes a Yggdrasil-compatible session server that can answer
@@ -8,20 +8,20 @@ package net.auther.auth
  * already checks it, and `HasJoinedServerMixin` only consults the providers
  * below when Mojang rejects the session.
  */
-interface AuthProvider {
+public interface AuthProvider {
     /** Short id used in the config file, e.g. `"elyby"`. */
-    val id: String
+    String getId();
 
     /** Human-readable name for logs. */
-    val displayName: String
+    String getDisplayName();
 
     /** The provider's `hasJoined` endpoint. */
-    val checkUrl: String
+    String getCheckUrl();
 
     /**
      * Optional URL template for fetching signed profile properties (textures).
      * `{0}` is replaced with the player's username. `null` = use the properties
      * from the `hasJoined` response.
      */
-    val propertyUrl: String?
+    String getPropertyUrl();
 }

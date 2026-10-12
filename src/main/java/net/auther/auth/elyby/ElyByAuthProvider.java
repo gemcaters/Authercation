@@ -1,6 +1,6 @@
-package net.auther.auth.elyby
+package net.auther.auth.elyby;
 
-import net.auther.auth.AuthProvider
+import net.auther.auth.AuthProvider;
 
 /**
  * Ely.by session server.
@@ -15,9 +15,24 @@ import net.auther.auth.AuthProvider
  * Mitigations: install No Chat Reports on the server, or set
  * `enforce-secure-profile=false` in `server.properties`.
  */
-class ElyByAuthProvider : AuthProvider {
-    override val id: String = "elyby"
-    override val displayName: String = "Ely.by"
-    override val checkUrl: String = "https://authserver.ely.by/session/hasJoined"
-    override val propertyUrl: String? = "http://skinsystem.ely.by/textures/signed/{0}"
+public final class ElyByAuthProvider implements AuthProvider {
+    @Override
+    public String getId() {
+        return "elyby";
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Ely.by";
+    }
+
+    @Override
+    public String getCheckUrl() {
+        return "https://authserver.ely.by/session/hasJoined";
+    }
+
+    @Override
+    public String getPropertyUrl() {
+        return "http://skinsystem.ely.by/textures/signed/{0}";
+    }
 }
