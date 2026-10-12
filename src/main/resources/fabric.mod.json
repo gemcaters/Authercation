@@ -1,0 +1,43 @@
+{
+	"schemaVersion": 1,
+	"id": "authercation",
+	"version": "${version}",
+	"name": "AltAuth",
+	"description": "Multi-provider Minecraft authentication mod. Supports Microsoft and Ely.by accounts while keeping online-mode=true.",
+	"authors": [],
+	"contact": {},
+	"license": "TBD",
+	"icon": "assets/authercation/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			{
+				"value": "net.auther.Authercation",
+				"adapter": "kotlin"
+			}
+		],
+		"client": [
+			{
+				"value": "net.auther.client.AuthercationClient",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"mixins": [
+		"authercation.mixins.json",
+		{
+			"config": "authercation.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*",
+		"fabric-language-kotlin": "*"
+	},
+	"suggest": {
+		"no_chat_reports": "*"
+	}
+}
