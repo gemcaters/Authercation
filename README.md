@@ -1,5 +1,5 @@
 # Authercation (Auther-cation)
-- Minecraft mod server that let u play with non-prenium(ELY.BY support) and preinum user 
+- Minecraft mod server that let u play with non-premium(ELY.BY support) and preminum user 
 
 # Requirement
 - Fabric API (required)
