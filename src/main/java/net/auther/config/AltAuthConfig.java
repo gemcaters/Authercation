@@ -68,7 +68,8 @@ public final class AltAuthConfig {
         Path path = configPath();
         if (Files.exists(path)) {
             try (java.io.BufferedReader reader = Files.newBufferedReader(path)) {
-                return gson.fromJson(reader, AltAuthConfig.class);
+                AltAuthConfig loaded = gson.fromJson(reader, AltAuthConfig.class);
+                return loaded != null ? loaded : new AltAuthConfig();
             } catch (Exception e) {
                 logger.error("Failed to read altauth.json, using defaults", e);
                 return new AltAuthConfig();
