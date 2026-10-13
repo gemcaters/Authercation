@@ -12,7 +12,9 @@ import com.mojang.authlib.services.ProfileResult;
 import com.mojang.authlib.services.response.HasJoinedMinecraftServerResponse;
 import com.mojang.authlib.services.response.NameAndId;
 import net.auther.auth.AuthProvider;
+import net.auther.auth.ProviderUuids;
 import net.auther.server.AuthSessionHandler;
+import net.auther.server.NamePinStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Final;
@@ -30,6 +32,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Hooks the server-side {@code hasJoinedServer} call made by the vanilla login
@@ -76,7 +79,7 @@ public abstract class HasJoinedServerMixin {
         try {
             ProfileResult mojangResult = original.call(profileName, serverId, address);
             if (mojangResult != null) {
-                return mojangResult;
+                return authercation$pin(profileName, mojangResult);
             }
         } catch (Exception e) {
             // Operation#call declares no checked exceptions, so match on type.
@@ -107,7 +110,7 @@ public abstract class HasJoinedServerMixin {
                 ProfileResult result = authercation$tryProvider(provider, profileName, serverId, address);
                 if (result != null) {
                     LOGGER.info("Authenticated {} via {}", profileName, provider.getDisplayName());
-                    return result;
+                    return authercation$pin(profileName, result);
                 }
                 LOGGER.debug("{} did not recognise session of {}", provider.getDisplayName(), profileName);
             } catch (MinecraftClientException e) {
@@ -152,9 +155,10 @@ public abstract class HasJoinedServerMixin {
 
         PropertyMap properties = authercation$resolveProperties(provider, profileName, response);
 
+        UUID mappedId = ProviderUuids.map(provider.getId(), response.id());
         GameProfile profile = properties != null
-            ? new GameProfile(response.id(), profileName, properties)
-            : new GameProfile(response.id(), profileName);
+            ? new GameProfile(mappedId, profileName, properties)
+            : new GameProfile(mappedId, profileName);
 
         return new ProfileResult(profile, Collections.emptySet());
     }
@@ -188,6 +192,22 @@ public abstract class HasJoinedServerMixin {
             LOGGER.debug("Property lookup failed for {} on {}: {}", profileName, provider.getDisplayName(), e.getMessage());
         }
         return fallback;
+    }
+
+    @Unique
+    private static ProfileResult authercation$pin(String profileName, ProfileResult result) {
+        if (!AuthSessionHandler.INSTANCE.getConfig().isPinNames()) {
+            return result;
+        }
+        GameProfile profile = result.profile();
+        if (NamePinStore.claim(profileName, profile.id())) {
+            return result;
+        }
+        LOGGER.warn(
+            "Refused {} ({}): the name already belongs to UUID {}. Remove it from authercation-names.json to free it.",
+            profileName, profile.id(), NamePinStore.ownerOf(profileName)
+        );
+        return null;
     }
 
     @Unique

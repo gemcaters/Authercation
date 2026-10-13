@@ -2,6 +2,7 @@ package net.auther;
 
 import net.auther.config.AltAuthConfig;
 import net.auther.server.AuthSessionHandler;
+import net.auther.server.ProviderTeams;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -25,6 +26,9 @@ public final class Authercation implements ModInitializer {
 
         // Boot the server-side session handler with the loaded config
         AuthSessionHandler.INSTANCE.init(config);
+
+        // Show "[Ely.by]" after the names of fallback-provider players (team suffix)
+        ProviderTeams.register();
 
         LOGGER.info("AltAuth ready. Providers: {}", config.getEnabledProviders());
     }

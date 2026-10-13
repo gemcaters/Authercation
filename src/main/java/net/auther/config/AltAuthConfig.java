@@ -26,20 +26,29 @@ import java.util.Collections;
  * @param preventFallbackIfPlayerExists  When true, a name that exists on Mojang can never be
  *                          claimed through a fallback provider (blocks Ely.by users who pick a
  *                          premium player's name). Default false.
+ * @param pinNames          When true (default), the first account to join with a name owns it:
+ *                          later logins using that name with a different UUID are refused.
  */
 public final class AltAuthConfig {
     private final List<String> enabledProviders;
     private final boolean preventFallbackIfPlayerExists;
+    private final boolean pinNames;
 
     public AltAuthConfig(List<String> enabledProviders, boolean preventFallbackIfPlayerExists) {
         this.enabledProviders = enabledProviders != null ? enabledProviders : new ArrayList<>();
         this.preventFallbackIfPlayerExists = preventFallbackIfPlayerExists;
+        this.pinNames = true;
     }
 
     public AltAuthConfig() {
         this.enabledProviders = new ArrayList<>();
         this.enabledProviders.add("elyby");
         this.preventFallbackIfPlayerExists = false;
+        this.pinNames = true;
+    }
+
+    public boolean isPinNames() {
+        return pinNames;
     }
 
     public List<String> getEnabledProviders() {
